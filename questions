@@ -2,4 +2,9 @@ Write your questions here!
 
 
 1. Does the fact that the message-bus class is singletone affect the tests i perform on it? If so, how?
-2. 
+2. More important facts about messageBus Class (important for tests and implementation): 
+  2.1. Singletione.
+  2.2. Thread-safe.
+  2.3. Cant alter any of the given methods from the interface.
+  2.4. Can't add methods to this interface.
+3. 
