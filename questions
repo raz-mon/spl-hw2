@@ -7,5 +7,5 @@ Write your questions here!
   2.2. Thread-safe.
   2.3. Cant alter any of the given methods from the interface.
   2.4. Can't add methods to this interface.
-3. Should we write tests to the Interface MessageBus or the class that implement it (MessageBusImpl)??
+3. Make sure we write tests for MessageBusImpl and not for MessageBus.
 4. 
