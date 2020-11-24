@@ -1,1 +1,5 @@
 Write your questions here!
+
+
+1. Does the fact that the message-bus class is singletone affect the tests i perform on it? If so, how?
+2. 
