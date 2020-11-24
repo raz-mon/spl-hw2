@@ -7,8 +7,8 @@ import org.junit.jupiter.api.AfterAll;
 
 import org.junit.jupiter.api.Test;
 
+import java.sql.Time;
 import java.util.concurrent.TimeUnit;
-
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -28,5 +28,31 @@ public class FutureTest {
         future.resolve(str);
         assertTrue(future.isDone());
         assertTrue(str.equals(future.get()));
+    }
+
+    @Test
+    public void testIsDone() {
+        //Check if return false
+        assertTrue(!future.isDone());
+        //Check if return true
+        String str = "someResult";
+        future.resolve(str);
+        assertTrue(future.isDone());
+    }
+
+    @Test
+    public void testGet() {
+        String str = "someResult";
+        future.resolve(str);
+        assertTrue(str.equals(future.get()));
+    }
+
+    @Test
+    public void testGetWithDelay() {
+        String s = future.get(2000,TimeUnit.MILLISECONDS);
+        String str = "someResult";
+        future.resolve(str);
+        boolean check = str.equals(s);
+        assertTrue(check);
     }
 }
