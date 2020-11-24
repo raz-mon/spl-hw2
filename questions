@@ -8,4 +8,4 @@ Write your questions here!
   2.3. Cant alter any of the given methods from the interface.
   2.4. Can't add methods to this interface.
 3. Make sure we write tests for MessageBusImpl and not for MessageBus.
-4. 
+4. Does each time futureTest run it is setUp this class or use run iterativily all the methods
