@@ -48,7 +48,7 @@ public class FutureTest {
     }
 
     @Test
-    public void testGetWithTimeOut() throws InterruptedException
+        public void testGetWithTimeOut() throws InterruptedException
     {
         assertFalse(future.isDone());
         future.get(100,TimeUnit.MILLISECONDS);

@@ -61,8 +61,18 @@ public class Future<T> {
      *         elapsed, return null.
      */
 	public T get(long timeout, TimeUnit unit) {
-		
-        return null;
+		if (isDone==true)
+			return result;
+		try{
+			unit.sleep(timeout);		// This doesn't really implement correctly I think. We need to wait timeout timeunis, here we wait timeout milliseconds.
+		}
+		catch(Exception e){
+			System.out.println("Something went wrong, at get method of Future.");
+		}
+		if (isDone==true)
+			return result;
+		else
+			return null;
 	}
 
 }

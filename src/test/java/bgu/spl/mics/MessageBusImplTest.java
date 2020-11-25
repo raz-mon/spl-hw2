@@ -12,7 +12,7 @@ class MessageBusImplTest {
 
     @BeforeEach
     void setUp() {
-        msgbus = new MessageBusImpl();
+
     }
 
     @AfterEach

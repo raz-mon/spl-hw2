@@ -11,7 +11,7 @@ import bgu.spl.mics.MicroService;
  * You can add private fields and public methods to this class.
  * You MAY change constructor signatures and even add new public constructors.
  */
-public class C3POMicroservice extends MicroService {
+public class C3POMicroservice extends MicroService {            // Does this class have to implement message interface? It sends messages.. Or maybe only abstract class Micro-srervice has to implement Message.
 	
     public C3POMicroservice() {
         super("C3PO");
@@ -22,3 +22,5 @@ public class C3POMicroservice extends MicroService {
 
     }
 }
+
+
