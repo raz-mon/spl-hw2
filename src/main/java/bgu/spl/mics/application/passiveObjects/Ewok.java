@@ -10,7 +10,10 @@ public class Ewok {
 	int serialNumber;
 	boolean available;
 	
-  
+  public Ewok(){        // We added. Available should be true at initialization.
+      available = true;
+      serialNumber = 0;
+  }
     /**
      * Acquires an Ewok
      */
@@ -24,4 +27,22 @@ public class Ewok {
     public void release() {
     	
     }
+
+
+
+
+
+
+
+
+   // ------------------------------ from here on - this is only for our internal testing.
+
+    /**
+     * This function is for our use only for testing!!
+     * @return
+     */
+    public boolean isAvailable(){
+        return available;
+    }
 }
+

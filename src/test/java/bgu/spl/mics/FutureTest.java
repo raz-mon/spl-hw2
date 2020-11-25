@@ -7,8 +7,8 @@ import org.junit.jupiter.api.AfterAll;
 
 import org.junit.jupiter.api.Test;
 
-import java.sql.Time;
 import java.util.concurrent.TimeUnit;
+
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -23,6 +23,15 @@ public class FutureTest {
     }
 
     @Test
+    public void testGet()
+    {
+        assertFalse(future.isDone());
+        future.resolve("");
+        future.get();
+        assertTrue(future.isDone());
+    }
+
+    @Test
     public void testResolve(){
         String str = "someResult";
         future.resolve(str);
@@ -31,28 +40,20 @@ public class FutureTest {
     }
 
     @Test
-    public void testIsDone() {
-        //Check if return false
-        assertTrue(!future.isDone());
-        //Check if return true
+    public void testIsDone(){
         String str = "someResult";
+        assertFalse(future.isDone());
         future.resolve(str);
         assertTrue(future.isDone());
     }
 
     @Test
-    public void testGet() {
-        String str = "someResult";
-        future.resolve(str);
-        assertTrue(str.equals(future.get()));
-    }
-
-    @Test
-    public void testGetWithDelay() {
-        String s = future.get(2000,TimeUnit.MILLISECONDS);
-        String str = "someResult";
-        future.resolve(str);
-        boolean check = str.equals(s);
-        assertTrue(check);
+    public void testGetWithTimeOut() throws InterruptedException
+    {
+        assertFalse(future.isDone());
+        future.get(100,TimeUnit.MILLISECONDS);
+        assertFalse(future.isDone());
+        future.resolve("foo");
+        assertEquals(future.get(100,TimeUnit.MILLISECONDS),"foo");
     }
 }
