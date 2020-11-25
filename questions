@@ -1,16 +1,23 @@
 Write your questions here!
 
 
-1. Does the fact that the message-bus class is singletone affect the tests i perform on it? If so, how?
-2. More important facts about messageBus Class (important for tests and implementation): 
+-  What is a "marker" iterface?
+
+-  Does the fact that the message-bus class is singletone affect the tests i perform on it? If so, how?
+  ans: Yes, it is indeed singleton and we have to write the code that makes it that way. And test it.
+-  More important facts about messageBus Class (important for tests and implementation): 
   2.1. Singletione.
   2.2. Thread-safe.
   2.3. Cant alter any of the given methods from the interface.
   2.4. Can't add methods to this interface.
-3. Make sure we write tests for MessageBusImpl and not for MessageBus.
-4. Does each time futureTest run it is setUp this class or use run iterativily all the methods
-  Ans: Separated tests.
-5. Can we make a CTR for Ewok so that the initial value for available is true? (We have to...).
-6. How do we need to impliment the method get(with delay).
-What is a "marker" iterface?
-7. Need to make a public method "getInstance" for MessageBusImpl in order to....
+-  Make sure we write tests for MessageBusImpl and not for MessageBus.
+  ans: Yes.
+-  Does each time futureTest run it is setUp this class or use run iterativily all the methods
+  Ans: Separated for each test.
+-  Can we make a CTR for Ewok so that the initial value for available is true? (We have to...).
+  ans: Yes. Required to.
+-  Need to make a public method "getInstance" for MessageBusImpl in order to make it singletone.
+  ans: Right. Do that.
+
+
+
