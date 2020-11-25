@@ -15,10 +15,6 @@ class EwokTest {
         ewok = new Ewok();
     }
 
-    @AfterEach
-    void tearDown() {
-    }
-
     @Test
     void acquire() {
         ewok.acquire();
@@ -32,3 +28,4 @@ class EwokTest {
         assertTrue(ewok.available);
     }
 }
+

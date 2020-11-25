@@ -6,7 +6,20 @@ package bgu.spl.mics;
  * Only private fields and methods can be added to this class.
  */
 public class MessageBusImpl implements MessageBus {
-	
+
+	// Add a field that is an array of queues? something like that. Look at the collections they gave us. Arraylists and so.
+	// They are probably the way to go.
+	public static MessageBusImpl getInstance(){
+		/*
+		check if there exists an instance, if not generate.
+		  Use a private CTR to implement (as shown in class).
+		*/
+		return null;
+	}
+
+	private MessageBusImpl(){
+		// Initializefilds..
+	}
 	
 	@Override
 	public <T> void subscribeEvent(Class<? extends Event<T>> type, MicroService m) {
