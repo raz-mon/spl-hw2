@@ -18,6 +18,7 @@ import bgu.spl.mics.application.messages.ExplotionBroadcast;
 import bgu.spl.mics.application.messages.AttackEvent;
 import bgu.spl.mics.application.services.HanSoloMicroservice;
 
+
 class MessageBusImplTest{
 
     private MessageBusImpl msgbus;
@@ -36,7 +37,7 @@ class MessageBusImplTest{
         MicroService m1 = new HanSoloMicroservice();
         AttackEvent attack = new AttackEvent();
         msgbus.register(m1);
-        m1.subscribeEvent(attack.getClass(), () -> {});
+        m1.subscribeEvent(attack.getClass(), (atk) -> {});
         msgbus.sendEvent(attack);
         AttackEvent a1 = (AttackEvent) ((HanSoloMicroservice)m1).awaitMessage();
         assertEquals(attack, a1);
@@ -49,8 +50,8 @@ class MessageBusImplTest{
         // Maybe add another micro-service that isn't subscribed and make sure that he doesn't get the  message. (to avoid endless loop, it can be subscribed to another croadcast and we can make sure it gets that one and not the rather.
         msgbus.register(m1);
         msgbus.register(m2);
-        m1.subscribeBroadcast(ExplotionBroadcast.getClass(), () -> {});
-        m2.subscribeBroadcast(ExplotionBroadcast.getClass(), () -> {});
+        m1.subscribeBroadcast(ExplotionBroadcast.class, (br) -> {});
+        m2.subscribeBroadcast(ExplotionBroadcast.class, (br) -> {});
         Broadcast brd = new ExplotionBroadcast();
         msgbus.sendBroadcast(brd);
         ExplotionBroadcast exp1 = (ExplotionBroadcast) ((HanSoloMicroservice)m1).awaitMessage();
@@ -61,12 +62,12 @@ class MessageBusImplTest{
 
     @Test
     void complete() {
-        Future<Boolean> ftr = new Future<Boolean>();
         Attack[] a = new Attack[0];
         MicroService m = new LeiaMicroservice(a);
         AttackEvent attack = new AttackEvent();
-
-        boolean check = true;
+        Future<Boolean> ftr = m.sendEvent(attack);
+        msgbus.complete(attack,true);
+        assertTrue(ftr.get());
 
     }
 
@@ -77,8 +78,8 @@ class MessageBusImplTest{
         // Maybe add another micro-service that isn't subscribed and make sure that he doesn't get the  message. (to avoid endless loop, it can be subscribed to another croadcast and we can make sure it gets that one and not the rather.
         msgbus.register(m1);
         msgbus.register(m2);
-        m1.subscribeBroadcast(ExplotionBroadcast.getClass(), () -> {});
-        m2.subscribeBroadcast(ExplotionBroadcast.getClass(), () -> {});
+        m1.subscribeBroadcast(ExplotionBroadcast.class, (br)->{});
+        m2.subscribeBroadcast(ExplotionBroadcast.class, (br) -> {});
         Broadcast brd = new ExplotionBroadcast();
         msgbus.sendBroadcast(brd);
         ExplotionBroadcast exp1 = (ExplotionBroadcast) ((HanSoloMicroservice)m1).awaitMessage();
@@ -94,7 +95,7 @@ class MessageBusImplTest{
         AttackEvent attack = new AttackEvent();
         msgbus.register(m1);
         msgbus.register(m2);
-        m1.subscribeEvent(attack.getClass(), () -> {});
+        m1.subscribeEvent(attack.getClass(), (atk) -> {});
         m2.sendEvent(attack);
         AttackEvent a1 = (AttackEvent) ((HanSoloMicroservice)m1).awaitMessage();
         assertEquals(attack, a1);
@@ -103,7 +104,7 @@ class MessageBusImplTest{
     @Test
     void register() {
         MicroService m1 = new HanSoloMicroservice();
-        m1.register();
+        //m1.register();
 
 
     }
@@ -113,6 +114,20 @@ class MessageBusImplTest{
     }
 
     @Test
-    void awaitMessage() {
+    void awaitMessage() throws InterruptedException {
+        MicroService m1 = new HanSoloMicroservice();
+        MicroService m2 = new HanSoloMicroservice();
+        //Notice there is no test for exception due to unregister microservice
+        msgbus.register(m1);
+        AttackEvent attack = new AttackEvent();
+        m1.subscribeEvent(attack.getClass(), (atk) -> {});
+        try {
+            AttackEvent message2 = (AttackEvent)msgbus.awaitMessage(m2);
+        }
+        catch(Exception e) {
+            //  Good, m2 did not register
+        }
+        AttackEvent message1 = (AttackEvent)msgbus.awaitMessage(m1);
+        assertEquals( message1 , attack);
     }
 }
