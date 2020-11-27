@@ -1,6 +1,8 @@
 package bgu.spl.mics.application.services;
 
+import bgu.spl.mics.Message;
 import bgu.spl.mics.MicroService;
+import bgu.spl.mics.application.messages.AttackEvent;
 
 
 /**
@@ -15,6 +17,13 @@ public class C3POMicroservice extends MicroService {            // Does this cla
 	
     public C3POMicroservice() {
         super("C3PO");
+    }
+
+    public Message awaitMessage(){
+        // This is very stupid. Be aware.
+        Message out = new AttackEvent();
+
+        return out;
     }
 
     @Override
