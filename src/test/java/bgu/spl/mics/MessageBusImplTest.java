@@ -1,21 +1,14 @@
 package bgu.spl.mics;
 
-
-
-import bgu.spl.mics.application.messages.BroadcastImpl;
-
 import bgu.spl.mics.application.passiveObjects.Attack;
 import bgu.spl.mics.application.services.C3POMicroservice;
 import bgu.spl.mics.application.services.LeiaMicroservice;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.AfterEach;
-
 import static org.junit.jupiter.api.Assertions.*;
-
 import org.junit.jupiter.api.Test;
-
 import bgu.spl.mics.application.messages.ExplotionBroadcast;
 import bgu.spl.mics.application.messages.AttackEvent;
+import bgu.spl.mics.application.messages.DeactivationEvent;
 import bgu.spl.mics.application.services.HanSoloMicroservice;
 
 
@@ -28,23 +21,26 @@ class MessageBusImplTest{
         msgbus = MessageBusImpl.getInstance();
     }
 
-    @AfterEach
-    void tearDown() {
-    }
-
     @Test
-    void subscribeEvent() {
+    void testsubscribeEvent() {
         MicroService m1 = new HanSoloMicroservice();
         AttackEvent attack = new AttackEvent();
+        DeactivationEvent DE = new DeactivationEvent();
         msgbus.register(m1);
         m1.subscribeEvent(attack.getClass(), (atk) -> {});
+        msgbus.sendEvent(DE);
         msgbus.sendEvent(attack);
-        AttackEvent a1 = (AttackEvent) ((HanSoloMicroservice)m1).awaitMessage();
-        assertEquals(attack, a1);
+        try {
+            AttackEvent a1 = (AttackEvent) msgbus.awaitMessage(m1);
+            assertEquals(attack, a1);
+        }
+        catch(Exception w){
+            System.out.println("problem in awaitMessage from testsubscribeEvent");
+        }
     }
 
     @Test
-    void subscribeBroadcast() {
+    void testsubscribeBroadcast() {
         MicroService m1 = new HanSoloMicroservice();
         MicroService m2 = new C3POMicroservice();
         // Maybe add another micro-service that isn't subscribed and make sure that he doesn't get the  message. (to avoid endless loop, it can be subscribed to another croadcast and we can make sure it gets that one and not the rather.
@@ -54,25 +50,29 @@ class MessageBusImplTest{
         m2.subscribeBroadcast(ExplotionBroadcast.class, (br) -> {});
         Broadcast brd = new ExplotionBroadcast();
         msgbus.sendBroadcast(brd);
-        ExplotionBroadcast exp1 = (ExplotionBroadcast) ((HanSoloMicroservice)m1).awaitMessage();
-        ExplotionBroadcast exp2 = (ExplotionBroadcast) ((C3POMicroservice)m1).awaitMessage();
-        assertEquals(exp1, brd);
-        assertEquals(exp2, brd);
+        try {
+            ExplotionBroadcast exp1 = (ExplotionBroadcast) msgbus.awaitMessage(m1);
+            ExplotionBroadcast exp2 = (ExplotionBroadcast) msgbus.awaitMessage(m2);
+            assertEquals(exp1, brd);
+            assertEquals(exp2, brd);
+        }
+        catch(Exception w){
+            System.out.println("problem in awaitMessage from testsubscribeBroadcast");
+        }
     }
 
     @Test
-    void complete() {
+    void testcomplete() {
         Attack[] a = new Attack[0];
         MicroService m = new LeiaMicroservice(a);
         AttackEvent attack = new AttackEvent();
         Future<Boolean> ftr = m.sendEvent(attack);
         msgbus.complete(attack,true);
         assertTrue(ftr.get());
-
     }
 
     @Test
-    void sendBroadcast() {
+    void testsendBroadcast() {
         MicroService m1 = new HanSoloMicroservice();
         MicroService m2 = new C3POMicroservice();
         // Maybe add another micro-service that isn't subscribed and make sure that he doesn't get the  message. (to avoid endless loop, it can be subscribed to another croadcast and we can make sure it gets that one and not the rather.
@@ -82,55 +82,75 @@ class MessageBusImplTest{
         m2.subscribeBroadcast(ExplotionBroadcast.class, (br) -> {});
         Broadcast brd = new ExplotionBroadcast();
         msgbus.sendBroadcast(brd);
-        ExplotionBroadcast exp1 = (ExplotionBroadcast) ((HanSoloMicroservice)m1).awaitMessage();
-        ExplotionBroadcast exp2 = (ExplotionBroadcast) ((C3POMicroservice)m1).awaitMessage();
-        assertEquals(exp1, brd);
-        assertEquals(exp2, brd);
+        try {
+            ExplotionBroadcast exp1 = (ExplotionBroadcast) msgbus.awaitMessage(m1);
+            ExplotionBroadcast exp2 = (ExplotionBroadcast) msgbus.awaitMessage(m2);
+            assertEquals(exp1, brd);
+            assertEquals(exp2, brd);
+        }
+        catch(Exception w){
+            System.out.println("problem in awaitMessage from testsendBroadcast");
+        }
+
+
     }
 
     @Test
-    void sendEvent() {
+    void testsendEvent(){
         MicroService m1 = new HanSoloMicroservice();
-        MicroService m2 = new HanSoloMicroservice();
+        MicroService m2 = new LeiaMicroservice(new Attack[0]);
         AttackEvent attack = new AttackEvent();
         msgbus.register(m1);
         msgbus.register(m2);
         m1.subscribeEvent(attack.getClass(), (atk) -> {});
         m2.sendEvent(attack);
-        AttackEvent a1 = (AttackEvent) ((HanSoloMicroservice)m1).awaitMessage();
-        assertEquals(attack, a1);
+        try{
+            AttackEvent a1 = (AttackEvent) msgbus.awaitMessage(m1);
+            assertEquals(attack, a1);
+        }
+        catch(Exception e){
+            System.out.println("problem in awaitMessage from testsendEvent");
+        }
     }
 
     @Test
-    void register() throws InterruptedException {
+    void testregister(){
         MicroService m1 = new HanSoloMicroservice();
         msgbus.register(m1);
         AttackEvent attack = new AttackEvent();
         m1.subscribeEvent(attack.getClass(), (atk) -> {});
         msgbus.sendEvent(attack);
-        AttackEvent message = (AttackEvent)msgbus.awaitMessage(m1);
-    }
-
-    @Test       //We were told not to implement this.
-    void unregister() {
+        try {
+            AttackEvent message = (AttackEvent) msgbus.awaitMessage(m1);
+            assertEquals(attack, message);
+        }
+        catch(Exception e){
+            System.out.println("problem in awaitMessage from testregister");
+        }
     }
 
     @Test
-    void awaitMessage() throws InterruptedException {
+    void testawaitMessage(){
         MicroService m1 = new HanSoloMicroservice();
         MicroService m2 = new HanSoloMicroservice();
-        //Notice there is no test for exception due to unregister microservice
         msgbus.register(m1);
         AttackEvent attack = new AttackEvent();
-        msgbus.sendEvent(attack);
         m1.subscribeEvent(attack.getClass(), (atk) -> {});
+        msgbus.sendEvent(attack);
         try {
-            AttackEvent message2 = (AttackEvent)msgbus.awaitMessage(m2);
+            AttackEvent message1 = (AttackEvent)msgbus.awaitMessage(m1);
+            assertEquals(message1 , attack);
         }
         catch(Exception e) {
-            //  Good, m2 did not register
+            System.out.println("problem in awaitMessage from testawaitMessage");
         }
-        AttackEvent message1 = (AttackEvent)msgbus.awaitMessage(m1);
-        assertEquals( message1 , attack);
+        boolean b = false;
+        try{
+            AttackEvent message2 = (AttackEvent)msgbus.awaitMessage(m2);
+        }
+        catch(Exception e){
+            b = true;           //Make sure we get into this catch (threw an exception).
+        }
+        assertTrue(b);
     }
 }
