@@ -1,4 +1,5 @@
 package bgu.spl.mics;
+import java.util.Vector;
 
 /**
  * The {@link MessageBusImpl class is the implementation of the MessageBus interface.
@@ -7,8 +8,10 @@ package bgu.spl.mics;
  */
 public class MessageBusImpl implements MessageBus {
 
-	private static MessageBusImpl msgBus;
+	public Vector<Message> aaa = new Vector<>(5);
 
+
+	private static MessageBusImpl msgBus = null;
 	// Add a field that is an array of queues? something like that. Look at the collections they gave us. Arraylists and so.
 	// They are probably the way to go.
 	public static MessageBusImpl getInstance(){

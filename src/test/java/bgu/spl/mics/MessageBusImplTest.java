@@ -1,7 +1,7 @@
 package bgu.spl.mics;
 
 
-// teteeteteteteteteeeeeeeeeeeeeeee
+
 import bgu.spl.mics.application.messages.BroadcastImpl;
 
 import bgu.spl.mics.application.passiveObjects.Attack;
@@ -102,11 +102,13 @@ class MessageBusImplTest{
     }
 
     @Test
-    void register() {
+    void register() throws InterruptedException {
         MicroService m1 = new HanSoloMicroservice();
-        //m1.register();
-
-
+        msgbus.register(m1);
+        AttackEvent attack = new AttackEvent();
+        m1.subscribeEvent(attack.getClass(), (atk) -> {});
+        msgbus.sendEvent(attack);
+        AttackEvent message = (AttackEvent)msgbus.awaitMessage(m1);
     }
 
     @Test       //We were told not to implement this.
@@ -120,6 +122,7 @@ class MessageBusImplTest{
         //Notice there is no test for exception due to unregister microservice
         msgbus.register(m1);
         AttackEvent attack = new AttackEvent();
+        msgbus.sendEvent(attack);
         m1.subscribeEvent(attack.getClass(), (atk) -> {});
         try {
             AttackEvent message2 = (AttackEvent)msgbus.awaitMessage(m2);
