@@ -16,13 +16,13 @@ class EwokTest {
     }
 
     @Test
-    void acquire() {
+    void testacquire() {
         ewok.acquire();
         assertFalse(ewok.available);
     }
 
     @Test
-    void release() {
+    void testrelease() {
         ewok.acquire();
         ewok.release();
         assertTrue(ewok.available);
