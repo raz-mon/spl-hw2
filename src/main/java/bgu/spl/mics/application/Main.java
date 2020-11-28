@@ -1,5 +1,5 @@
 package bgu.spl.mics.application;
-
+import java.util.Vector;
 
 import bgu.spl.mics.application.passiveObjects.Ewok;
 
@@ -9,8 +9,6 @@ import bgu.spl.mics.application.passiveObjects.Ewok;
  */
 public class Main {
 	public static void main(String[] args) {
-	Ewok ewok = new Ewok();
-	System.out.println(ewok.isAvailable());
 
 	}
 }

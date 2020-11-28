@@ -1,5 +1,6 @@
 package bgu.spl.mics;
 import java.util.Vector;
+import java.util.Collections.*;
 
 /**
  * The {@link MessageBusImpl class is the implementation of the MessageBus interface.
@@ -8,8 +9,8 @@ import java.util.Vector;
  */
 public class MessageBusImpl implements MessageBus {
 
-	public Vector<Message> aaa = new Vector<>(5);
-
+	private Vector<Vector<Message>> queues;
+	private Vector<Vector<Class<? extends Event>>> interests;
 
 	private static MessageBusImpl msgBus = null;
 	// Add a field that is an array of queues? something like that. Look at the collections they gave us. Arraylists and so.
@@ -21,7 +22,8 @@ public class MessageBusImpl implements MessageBus {
 		}
 
 	private MessageBusImpl(){
-		// Initializefilds..
+		this.queues = new Vector<Vector<Message>>(0,1);
+		this.interests = new Vector<Vector<Class<? extends Event>>>(0,1);
 	}
 	
 	@Override

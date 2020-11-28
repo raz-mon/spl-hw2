@@ -19,7 +19,8 @@ package bgu.spl.mics;
  * <p>
  */
 public abstract class MicroService implements Runnable { 
-    
+    private int queueID;
+    private long delayTime;
 
     /**
      * @param name the micro-service name (used mainly for debugging purposes -
