@@ -37,4 +37,7 @@ public class Attack {
         return this.duration;
     }
 
+    public String toString() {
+        return "serials: " + serials.toString() + ", " + "duration: " + duration;
+    }
 }
