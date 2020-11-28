@@ -19,16 +19,16 @@ public class FutureTest {
 
     @BeforeEach
     public void setUp(){
-        future = new Future<>();
+        future = new Future<String>();
     }
 
     @Test
     public void testGet()
     {
         assertFalse(future.isDone());
-        future.resolve("");
-        future.get();
+        future.resolve("test");
         assertTrue(future.isDone());
+        assertEquals("test", future.get());
     }
 
     @Test
@@ -36,7 +36,7 @@ public class FutureTest {
         String str = "someResult";
         future.resolve(str);
         assertTrue(future.isDone());
-        assertTrue(str.equals(future.get()));
+        assertEquals(future.get(), str);
     }
 
     @Test
