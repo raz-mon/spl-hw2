@@ -1,7 +1,7 @@
 package bgu.spl.mics;
 
 
-// teteeteteteteteteeeeeeeeeeeeeeeeeeee
+// teteeteteteteteteeeeeeeeeeeeeeee
 import bgu.spl.mics.application.messages.BroadcastImpl;
 
 import bgu.spl.mics.application.passiveObjects.Attack;
