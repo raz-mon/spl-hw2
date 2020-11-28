@@ -18,7 +18,8 @@ package bgu.spl.mics;
  * Only private fields and methods may be added to this class.
  * <p>
  */
-public abstract class MicroService implements Runnable { 
+public abstract class MicroService implements Runnable {
+    private String name;
     private int queueID;
     private long delayTime;
 
@@ -27,7 +28,7 @@ public abstract class MicroService implements Runnable {
      *             does not have to be unique)
      */
     public MicroService(String name) {
-    	
+        this.name = name;
     }
 
     /**

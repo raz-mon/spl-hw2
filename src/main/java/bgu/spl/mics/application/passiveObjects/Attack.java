@@ -21,8 +21,20 @@ public class Attack {
         this.duration = duration;
     }
 
-    public String toString(){
-        return "serials: " + serials.toString() + ", " + "duration: " + duration;
+    /**
+     * getter for Serial
+     * @return List<Integer>
+     */
+    public List<Integer> getSerials(){
+        return this.serials;
+    }
+
+    /**
+     * getter for duration
+     * @return
+     */
+    public int getDuration(){
+        return this.duration;
     }
 
 }

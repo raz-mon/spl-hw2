@@ -2,8 +2,11 @@ package bgu.spl.mics.application.services;
 
 
 import bgu.spl.mics.Message;
+import bgu.spl.mics.MessageBus;
+import bgu.spl.mics.MessageBusImpl;
 import bgu.spl.mics.MicroService;
 import bgu.spl.mics.application.messages.AttackEvent;
+import bgu.spl.mics.application.messages.ExplotionBroadcast;
 
 /**
  * HanSoloMicroservices is in charge of the handling {@link AttackEvents}.
@@ -21,6 +24,9 @@ public class HanSoloMicroservice extends MicroService {
 
     @Override
     protected void initialize() {
-
+        MessageBus msgBus = MessageBusImpl.getInstance();
+        msgBus.register(this);
+        subscribeBroadcast(ExplotionBroadcast.class, (exp) -> {terminate();});
+        subscribeEvent(AttackEvent.class,(atk) -> {});
     }
 }
