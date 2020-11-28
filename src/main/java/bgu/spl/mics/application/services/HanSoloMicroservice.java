@@ -19,15 +19,6 @@ public class HanSoloMicroservice extends MicroService {
         super("Han");
     }
 
-    public Message awaitMessage(){
-        // This is very stupid. Be aware.
-        Message out = new AttackEvent();
-
-        return out;
-    }
-
-
-
     @Override
     protected void initialize() {
 
