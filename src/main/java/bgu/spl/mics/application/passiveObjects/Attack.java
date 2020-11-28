@@ -20,4 +20,9 @@ public class Attack {
         this.serials = serialNumbers;
         this.duration = duration;
     }
+
+    public String toString(){
+        return "serials: " + serials.toString() + ", " + "duration: " + duration;
+    }
+
 }
