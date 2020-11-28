@@ -22,7 +22,6 @@ public class C3POMicroservice extends MicroService {            // Does this cla
     public Message awaitMessage(){
         // This is very stupid. Be aware.
         Message out = new AttackEvent();
-
         return out;
     }
 
