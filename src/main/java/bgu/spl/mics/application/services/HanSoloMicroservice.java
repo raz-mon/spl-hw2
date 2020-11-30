@@ -30,3 +30,4 @@ public class HanSoloMicroservice extends MicroService {
         subscribeEvent(AttackEvent.class,(atk) -> {});
     }
 }
+

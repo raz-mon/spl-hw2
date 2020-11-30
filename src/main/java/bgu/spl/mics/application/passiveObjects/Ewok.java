@@ -10,9 +10,9 @@ public class Ewok {
 	int serialNumber;
 	boolean available;
 	
-  public Ewok(){        // We added. Available should be true at initialization.
+  public Ewok(int serialNumber){        // We added. Available should be true at initialization.
       available = true;
-      serialNumber = 0;
+      this.serialNumber = serialNumber;
   }
     /**
      * Acquires an Ewok

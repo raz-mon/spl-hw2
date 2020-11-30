@@ -25,11 +25,13 @@ public class MessageBusImpl implements MessageBus {
 	private MessageBusImpl(){
 		this.queues = new Vector<Vector<Message>>(0,1);
 		this.interests = new Vector<Vector<Class<? extends Event>>>(0,1);
+		this.names = new Vector<String>();
 	}
 	
 	@Override
 	public <T> void subscribeEvent(Class<? extends Event<T>> type, MicroService m) {
-		
+		int ind = names.indexOf(m.getName());
+		interests.get(ind).add(type);
 	}
 
 	@Override
