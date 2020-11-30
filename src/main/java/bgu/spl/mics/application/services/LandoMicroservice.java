@@ -14,14 +14,14 @@ import bgu.spl.mics.application.messages.ExplotionBroadcast;
  */
 public class LandoMicroservice  extends MicroService {
 
+    private final long duration;
     public LandoMicroservice(long duration) {
         super("Lando");
+        this.duration = duration;
     }
 
     @Override
     protected void initialize() {
-        MessageBus msgBus = MessageBusImpl.getInstance();
-        msgBus.register(this);
         subscribeBroadcast(ExplotionBroadcast.class, (exp) -> {terminate();});
         subscribeEvent(BombDestroyerEvent.class,(atk) -> {});
     }

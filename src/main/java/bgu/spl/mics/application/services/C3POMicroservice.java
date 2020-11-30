@@ -1,8 +1,11 @@
 package bgu.spl.mics.application.services;
 
 import bgu.spl.mics.Message;
+import bgu.spl.mics.MessageBus;
+import bgu.spl.mics.MessageBusImpl;
 import bgu.spl.mics.MicroService;
 import bgu.spl.mics.application.messages.AttackEvent;
+import bgu.spl.mics.application.messages.ExplotionBroadcast;
 
 
 /**
@@ -19,15 +22,10 @@ public class C3POMicroservice extends MicroService {            // Does this cla
         super("C3PO");
     }
 
-    public Message awaitMessage(){
-        // This is very stupid. Be aware.
-        Message out = new AttackEvent();
-        return out;
-    }
-
     @Override
     protected void initialize() {
-
+        subscribeBroadcast(ExplotionBroadcast.class, (exp) -> {terminate();});
+        subscribeEvent(AttackEvent.class,(atk) -> {});
     }
 }
 

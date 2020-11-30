@@ -24,10 +24,7 @@ public class HanSoloMicroservice extends MicroService {
 
     @Override
     protected void initialize() {
-        MessageBus msgBus = MessageBusImpl.getInstance();
-        msgBus.register(this);
         subscribeBroadcast(ExplotionBroadcast.class, (exp) -> {terminate();});
         subscribeEvent(AttackEvent.class,(atk) -> {});
     }
 }
-
