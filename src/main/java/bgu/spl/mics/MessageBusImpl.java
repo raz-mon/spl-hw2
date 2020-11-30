@@ -9,6 +9,7 @@ import java.util.Collections.*;
  */
 public class MessageBusImpl implements MessageBus {
 
+	private Vector<String> names;
 	private Vector<Vector<Message>> queues;
 	private Vector<Vector<Class<? extends Event>>> interests;
 

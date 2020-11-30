@@ -20,7 +20,6 @@ package bgu.spl.mics;
  */
 public abstract class MicroService implements Runnable {
     private String name;
-    private int queueID;
     private long delayTime;
 
     /**
@@ -139,7 +138,7 @@ public abstract class MicroService implements Runnable {
      *         construction time and is used mainly for debugging purposes.
      */
     public final String getName() {
-        return null;
+        return this.name;
     }
 
     /**
