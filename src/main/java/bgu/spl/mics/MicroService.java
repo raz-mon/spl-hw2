@@ -22,6 +22,7 @@ public abstract class MicroService implements Runnable {
     private String name;
     private long delayTime;
 
+
     /**
      * @param name the micro-service name (used mainly for debugging purposes -
      *             does not have to be unique)
@@ -121,7 +122,8 @@ public abstract class MicroService implements Runnable {
      *               {@code e}.
      */
     protected final <T> void complete(Event<T> e, T result) {
-    	
+        MessageBus msgBus = MessageBusImpl.getInstance();
+        msgBus.complete(e,result);
     }
 
     /**

@@ -74,5 +74,4 @@ public class Future<T> {
 		else
 			return null;
 	}
-
 }
