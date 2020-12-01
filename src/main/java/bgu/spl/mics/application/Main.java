@@ -3,6 +3,7 @@ import java.io.FileReader;
 import java.nio.file.Watchable;
 import java.util.Vector;
 
+import bgu.spl.mics.MessageBusImpl;
 import bgu.spl.mics.application.passiveObjects.Ewok;
 import bgu.spl.mics.application.passiveObjects.Ewoks;
 import bgu.spl.mics.application.services.*;
@@ -35,7 +36,8 @@ public class Main {
 		R2D2Microservice r2d2 = new R2D2Microservice(in.getR2D2());
 		LandoMicroservice lando = new LandoMicroservice(in.getLando());
 
-		Ewoks ewks = Ewoks.getInstance(in.getEwoks());
+		Ewoks ewks = Ewoks.getInstance(in.getEwoks());		// Ewoks is single-tone -> only one instance (this one) will be used through-out the program.
+		MessageBusImpl msgbus = MessageBusImpl.getInstance();		// Makes sense to initialize msgBus here to.
 
 		Thread t1 = new Thread(leia);
 		Thread t2 = new Thread(han);

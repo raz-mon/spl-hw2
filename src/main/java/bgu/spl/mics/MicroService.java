@@ -25,7 +25,7 @@ public abstract class MicroService implements Runnable {
     private String name;
     private HashMap<Class<? extends Message>, Callback> msgToCallback;       //mapping a messege type into it's callback
     private MessageBus msgBus;
-    private boolean isTerminate;
+    private boolean terminated;
 
     /**
      * @param name the micro-service name (used mainly for debugging purposes -
@@ -35,7 +35,7 @@ public abstract class MicroService implements Runnable {
         this.name = name;
          msgBus = MessageBusImpl.getInstance();
          msgToCallback = new HashMap<Class<? extends Message>, Callback>(0);
-         this.isTerminate = false;
+         this.terminated = false;
     }
 
     /**
@@ -139,7 +139,7 @@ public abstract class MicroService implements Runnable {
      * message.
      */
     protected final void terminate() {
-        this.isTerminate = true;
+        this.terminated = true;
     }
 
     /**
@@ -159,7 +159,7 @@ public abstract class MicroService implements Runnable {
         msgBus.register(this);
     	initialize();
 
-    	while (!isTerminate){
+    	while (!terminated){
             try {
                 Message msg = msgBus.awaitMessage(this);
                 msgToCallback.get(msg.getClass()).call(msg);

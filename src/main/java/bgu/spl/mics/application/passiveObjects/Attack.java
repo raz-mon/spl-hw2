@@ -19,6 +19,7 @@ public class Attack {
     public Attack(List<Integer> serialNumbers, int duration) {
         this.serials = serialNumbers;
         this.duration = duration;
+        serials.sort((a , b) -> { return a - b;});                  // Sorting the list with comparator in order to avoid dead-locks.
     }
 
     /**

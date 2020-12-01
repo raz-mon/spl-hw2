@@ -16,6 +16,7 @@ public class MessageBusImpl implements MessageBus {
 	private HashMap<String, Vector<Class<? extends Message>>> interestsMap;	  // Option to use concurrent Hashmap.
 	private HashMap<String, Vector<Message>> queueMap;
 	private Vector<String> names;
+	private static String last;		// last will hold the last M-S between Han-Solo and C3PO that was assigned an AttackEvent.
 
 	private static MessageBusImpl msgBus = null;
 
@@ -32,6 +33,7 @@ public class MessageBusImpl implements MessageBus {
 
 		this.interestsMap = new HashMap<>(0);
 		this.queueMap = new HashMap<>(0);
+		last = null;
 	}
 	
 	@Override
@@ -57,17 +59,27 @@ public class MessageBusImpl implements MessageBus {
 	public void sendBroadcast(Broadcast b) {
 		for (String name : names){
 			if (this.interestsMap.get(name).contains(b.getClass()))
-				this.queueMap.get(name).add(b);
+				this.queueMap.get(name).add(b);		// Adds broadcast b to all relevant M-S.
 		}
+		notifyAll();		// Awaken all waiting methods.
 	}
-
 	
 	@Override
 	public <T> Future<T> sendEvent(Event<T> e) {
 		Future<T> future = new Future<T>();
-
-		//If AttackEvent -> Need to send in round robin manner.
-
+		if (e.getClass()==AttackEvent.class){
+			// send by round robin manner
+			String turn = roundRobin();
+			this.queueMap.get(turn).add(e);		// Adds Message (Event in this case) e to the relevant M-S.
+			// Still need to deal with the future somehow.
+		}
+		else		// All Events but AttackEvent
+		for (String name : names){
+			if (this.interestsMap.get(name).contains(e.getClass()))
+				this.queueMap.get(name).add(e);		// Adds message (Event in this case) e to the relevant M-S (only one of those if this is not and AttackEvent). [Make sure there is only one].
+		}
+		// Idea -> Save a vector (or concurrentHashMaps) of futures. When the relevant event is completed, the complete method will resolve the future (and notify sender?).
+		notifyAll();		// Awaken all waiting methods.
 		return future;
 	}
 
@@ -98,10 +110,27 @@ public class MessageBusImpl implements MessageBus {
 	@Override
 	public Message awaitMessage(MicroService m) throws InterruptedException {
 		// if there is a message, return it. If not, wait.
-		if (this.queueMap.get(m.getName()).isEmpty()){	// Can also be  a while (style Wait & Notify Design).
-			// make thread that's handling the M-S wait untill there is a message?
-		}
+		while (this.queueMap.get(m.getName()).isEmpty())	// Can also be  a while (style Wait & Notify Design).
+			wait();			// maybe m.wait()? wait() -> this msgBus will wait?
 		return queueMap.get(m.getName()).firstElement();
-		// Again, Check Vectors methods for correnctness and that it indeed works here well!!!!
+		// Again, Check Vectors methods for correctness and that it indeed works here well (it should, for it is thread-safe).
+	}
+
+
+	private static String roundRobin(){
+		// The idea is to return the correct (the one that was not assigned the last AttackEvent) name (via String) according to the round-Robin manner, between Han-Solo
+		// and C3PO. this will be used at sendEvent.
+		if (last == null) {
+			last = "Han";
+			return "Han";        // If no-one was assigned a task yet -> return Han.
+		}
+		else if (last == "Han"){
+			last = "C3PO";
+			return "C3PO";		// If the last AttackEvent was handled by Han -> return C3PO.
+		}
+		else{
+			last = "Han";
+			return "Han";		// If the last AttackEvent was handled by C3PO -> return Han.
+		}
 	}
 }
