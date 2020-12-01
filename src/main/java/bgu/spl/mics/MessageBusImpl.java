@@ -1,6 +1,7 @@
 package bgu.spl.mics;
 import java.util.Vector;
 import java.util.Collections.*;
+import java.util.HashMap;
 
 /**
  * The {@link MessageBusImpl class is the implementation of the MessageBus interface.
@@ -9,13 +10,15 @@ import java.util.Collections.*;
  */
 public class MessageBusImpl implements MessageBus {
 
+//	private Vector<Vector<Message>> queues;
+//	private Vector<Vector<Class<? extends Message>>> interests;
+
+	private HashMap<String, Vector<Class<? extends Message>>> interestsMap;	  // Option to use concurrent Hashmap.
+	private HashMap<String, Vector<Message>> queueMap;
 	private Vector<String> names;
-	private Vector<Vector<Message>> queues;
-	private Vector<Vector<Class<? extends Event>>> interests;
 
 	private static MessageBusImpl msgBus = null;
-	// Add a field that is an array of queues? something like that. Look at the collections they gave us. Arraylists and so.
-	// They are probably the way to go.
+
 	public static MessageBusImpl getInstance(){
 		if (msgBus == null)
 			msgBus = new MessageBusImpl();
@@ -23,20 +26,26 @@ public class MessageBusImpl implements MessageBus {
 		}
 
 	private MessageBusImpl(){
-		this.queues = new Vector<Vector<Message>>(0,1);
-		this.interests = new Vector<Vector<Class<? extends Event>>>(0,1);
-		this.names = new Vector<String>();
+//		this.queues = new Vector<Vector<Message>>(0,1);
+//		this.interests = new Vector<Vector<Class<? extends Message>>>(0,1);
+		this.names = new Vector<String>(0,1);
+
+		this.interestsMap = new HashMap<>(0);
+		this.queueMap = new HashMap<>(0);
 	}
 	
 	@Override
 	public <T> void subscribeEvent(Class<? extends Event<T>> type, MicroService m) {
-		int ind = names.indexOf(m.getName());
-		interests.get(ind).add(type);
+//		int ind = names.indexOf(m.getName());
+//		interests.get(ind).add(type);
+		this.interestsMap.get(m.getName()).add(type);
 	}
 
 	@Override
 	public void subscribeBroadcast(Class<? extends Broadcast> type, MicroService m) {
-		
+		//		int ind = names.indexOf(m.getName());
+		//		interests.get(ind).add(type);
+		this.interestsMap.get(m.getName()).add(type);
     }
 
 	@Override @SuppressWarnings("unchecked")
@@ -46,29 +55,53 @@ public class MessageBusImpl implements MessageBus {
 
 	@Override
 	public void sendBroadcast(Broadcast b) {
-		
+		for (String name : names){
+			if (this.interestsMap.get(name).contains(b.getClass()))
+				this.queueMap.get(name).add(b);
+		}
 	}
 
 	
 	@Override
 	public <T> Future<T> sendEvent(Event<T> e) {
-		
-        return null;
+		Future<T> future = new Future<T>();
+
+		//If AttackEvent -> Need to send in round robin manner.
+
+		return future;
 	}
 
 	@Override
 	public void register(MicroService m) {
-		
+		/*
+		if (!names.contains(m.getName())){
+			names.add(m.getName());
+			queues.add(new Vector<Message>(0,1));
+		}
+ 		*/
+		if (!this.names.contains(m.getName())){
+			this.queueMap.put(m.getName(), new Vector<Message>());
+			this.interestsMap.put(m.getName(), new Vector<Class<? extends Message>>());
+			this.names.add(m.getName());
+		}
 	}
 
 	@Override
 	public void unregister(MicroService m) {
-		
+		if (this.names.contains(m.getName())){
+			this.queueMap.remove(m.getName());
+			this.interestsMap.remove(m.getName());
+			names.remove(m.getName());		// Check this removes correctly!!
+		}
 	}
 
 	@Override
 	public Message awaitMessage(MicroService m) throws InterruptedException {
-		
-		return null;
+		// if there is a message, return it. If not, wait.
+		if (this.queueMap.get(m.getName()).isEmpty()){	// Can also be  a while (style Wait & Notify Design).
+			// make thread that's handling the M-S wait untill there is a message?
+		}
+		return queueMap.get(m.getName()).firstElement();
+		// Again, Check Vectors methods for correnctness and that it indeed works here well!!!!
 	}
 }
