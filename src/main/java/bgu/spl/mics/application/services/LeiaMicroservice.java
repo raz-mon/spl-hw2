@@ -2,11 +2,14 @@ package bgu.spl.mics.application.services;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Vector;
 
+import bgu.spl.mics.Future;
 import bgu.spl.mics.MessageBus;
 import bgu.spl.mics.MessageBusImpl;
 import bgu.spl.mics.MicroService;
 import bgu.spl.mics.application.messages.AttackEvent;
+import bgu.spl.mics.application.messages.DeactivationEvent;
 import bgu.spl.mics.application.messages.ExplotionBroadcast;
 import bgu.spl.mics.application.passiveObjects.Attack;
 
@@ -20,14 +23,12 @@ import bgu.spl.mics.application.passiveObjects.Attack;
  */
 public class LeiaMicroservice extends MicroService {
 	private Attack[] attacks;
-    private int queueID;
-    private long delayTime;
-	
+	private Future<Boolean>[] ftr;
+
     public LeiaMicroservice(Attack[] attacks) {
         super("Leia");
-		this.attacks = attacks;
-        queueID = -1;
-        delayTime = 0;
+        this.attacks = attacks;
+        this.ftr = new Future[this.attacks.length + 2];           // two additional slots: 1 for DeactivationEvent and one for BombDestroyerEvent
     }
 
     /**
@@ -36,14 +37,12 @@ public class LeiaMicroservice extends MicroService {
      */
     @Override
     protected void initialize() {
-        MessageBusImpl msgBus = MessageBusImpl.getInstance();
-        msgBus.register(this);
         subscribeBroadcast(ExplotionBroadcast.class, (exp) -> {terminate();});
+
         //Send Events
         for(int i = 0; i < attacks.length; i++){
             AttackEvent e = new AttackEvent(attacks[i]);
-            sendEvent(e);
+            ftr[i] = sendEvent(e);
         }
-
     }
 }

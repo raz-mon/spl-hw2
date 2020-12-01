@@ -14,7 +14,7 @@ public class input {
 
 
     public String toString(){
-        String out = new String();
+        String out = "";
         for(int i=0; i<attacks.length; i++){
             out = out + attacks[i].toString();
             if (i!=attacks.length-1)
@@ -22,6 +22,21 @@ public class input {
         }
         out = out + "\n" + "R2D2: " + R2D2 + "\n" + "Lando: " + Lando + "\n" + "Ewols: " + Ewoks;
         return out;
+    }
+
+    public Attack[] getAttacks(){
+        return attacks;
+    }
+
+    public long getR2D2(){
+        return this.R2D2;
+    }
+    public long getLando(){
+        return this.Lando;
+    }
+
+    public int getEwoks(){
+        return this.Ewoks;
     }
 
 }

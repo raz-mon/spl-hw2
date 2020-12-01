@@ -1,4 +1,5 @@
 package bgu.spl.mics.application.passiveObjects;
+
 import java.util.Vector;
 
 /**
@@ -27,7 +28,4 @@ public class Ewoks {
             ewoks.add(e);
         }
     }
-
-
-
 }
