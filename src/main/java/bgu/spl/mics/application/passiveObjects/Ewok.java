@@ -17,21 +17,24 @@ public class Ewok {
      * Acquires an Ewok
      */
     public void acquire() {
-		
+		this.available = false;
     }
 
     /**
      * release an Ewok
      */
     public void release() {
-    	
+    	this.available = true;
     }
 
 
 
-
-
-
+    /**
+     * @return serialNumber of Ewok
+     */
+    public int getSerialNumber(){
+        return this.serialNumber;
+    }
 
 
    // ------------------------------ from here on - this is only for our internal testing.

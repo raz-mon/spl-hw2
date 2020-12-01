@@ -1,5 +1,6 @@
 package bgu.spl.mics;
 import java.util.Vector;
+import java.util.Collections.*;
 import java.util.HashMap;
 
 /**
@@ -9,12 +10,12 @@ import java.util.HashMap;
  */
 public class MessageBusImpl implements MessageBus {
 
-	private Vector<String> names;
 //	private Vector<Vector<Message>> queues;
 //	private Vector<Vector<Class<? extends Message>>> interests;
 
 	private HashMap<String, Vector<Class<? extends Message>>> interestsMap;	  // Option to use concurrent Hashmap.
 	private HashMap<String, Vector<Message>> queueMap;
+	private Vector<String> names;
 
 	private static MessageBusImpl msgBus = null;
 
@@ -37,21 +38,19 @@ public class MessageBusImpl implements MessageBus {
 	public <T> void subscribeEvent(Class<? extends Event<T>> type, MicroService m) {
 //		int ind = names.indexOf(m.getName());
 //		interests.get(ind).add(type);
-
 		this.interestsMap.get(m.getName()).add(type);
 	}
 
 	@Override
 	public void subscribeBroadcast(Class<? extends Broadcast> type, MicroService m) {
-//		int ind = names.indexOf(m.getName());
-//		interests.get(ind).add(type);
-
+		//		int ind = names.indexOf(m.getName());
+		//		interests.get(ind).add(type);
 		this.interestsMap.get(m.getName()).add(type);
     }
 
 	@Override @SuppressWarnings("unchecked")
 	public <T> void complete(Event<T> e, T result) {
-
+		
 	}
 
 	@Override
@@ -69,17 +68,17 @@ public class MessageBusImpl implements MessageBus {
 
 		//If AttackEvent -> Need to send in round robin manner.
 
-        return future;
+		return future;
 	}
 
 	@Override
 	public void register(MicroService m) {
-/*
+		/*
 		if (!names.contains(m.getName())){
 			names.add(m.getName());
 			queues.add(new Vector<Message>(0,1));
 		}
- */
+ 		*/
 		if (!this.names.contains(m.getName())){
 			this.queueMap.put(m.getName(), new Vector<Message>());
 			this.interestsMap.put(m.getName(), new Vector<Class<? extends Message>>());

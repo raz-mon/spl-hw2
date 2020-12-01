@@ -23,6 +23,15 @@ public class LandoMicroservice  extends MicroService {
     @Override
     protected void initialize() {
         subscribeBroadcast(ExplotionBroadcast.class, (exp) -> {terminate();});
-        subscribeEvent(BombDestroyerEvent.class,(atk) -> {});
+        subscribeEvent(BombDestroyerEvent.class,(bombardment) -> {
+            try{
+                Thread.sleep(duration);
+            }
+            catch (InterruptedException e){
+                System.out.println("Sleep had fail");
+            }
+
+            complete(bombardment, true);
+        });
     }
 }

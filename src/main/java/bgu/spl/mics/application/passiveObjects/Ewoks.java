@@ -8,7 +8,6 @@ import java.util.Vector;
  * This class must be implemented as a thread-safe singleton.
  * You must not alter any of the given public methods of this class.
  * <p>
- * You can add ONLY private methods and fields to this class.       // This is not true..
  */
 public class Ewoks {
 
@@ -16,7 +15,7 @@ public class Ewoks {
     private static Ewoks ewok = null;
 
     public static Ewoks getInstance(int num){
-        if (ewok==null){
+        if (ewok == null){
             return new Ewoks(num);
         }
         return ewok;
@@ -27,5 +26,11 @@ public class Ewoks {
             Ewok e = new Ewok(i);
             ewoks.add(e);
         }
+    }
+
+    public Ewok getEwok(int i){
+        if(i > ewoks.size())                            //Need to check if ewoks start from zero or one
+            throw new IndexOutOfBoundsException();
+        return this.ewoks.get(i);
     }
 }
