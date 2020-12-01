@@ -17,7 +17,7 @@ import bgu.spl.mics.application.messages.ExplotionBroadcast;
  */
 public class R2D2Microservice extends MicroService {
 
-    private long duration;
+    private final long duration;
     public R2D2Microservice(long duration) {
         super("R2D2");
         this.duration = duration;
@@ -26,6 +26,16 @@ public class R2D2Microservice extends MicroService {
     @Override
     protected void initialize() {
         subscribeBroadcast(ExplotionBroadcast.class, (exp) -> {terminate();});
-        subscribeEvent(DeactivationEvent.class,(atk) -> {});
+        subscribeEvent(DeactivationEvent.class,(deactivate) -> {
+            try{
+                Thread.sleep(duration);
+                // send event to lando\leia..
+            }
+            catch (InterruptedException e){
+                System.out.println("Sleep had fail");
+            }
+
+            complete(deactivate, true);
+        });
     }
 }
