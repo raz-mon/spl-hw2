@@ -35,14 +35,16 @@ public class HanSoloMicroservice extends MicroService {
             Ewoks ewks = Ewoks.getInstance(serials.size());             //Global Ewoks list
             for (Integer serial : serials) {
                 Ewok e = ewks.getEwok(serial);
-                while (!e.isAvailable()) {
-                    try {
-                        e.wait();         // Remember to notify when the Ewok is released.
-                    } catch (InterruptedException t) {
-                        System.out.println("wait interrupted");
-                    }     // We need to wait here (this Thread) until the relevant Ewok is released.
+                synchronized (e){
+                    while (!e.isAvailable()) {
+                        try {
+                            e.wait();         // Remember to notify when the Ewok is released.
+                        } catch (InterruptedException t) {
+                            System.out.println("wait interrupted");
+                        }     // We need to wait here (this Thread) until the relevant Ewok is released.
+                    }
+                    e.acquire();
                 }
-                e.acquire();
             }
             try{
                 Thread.sleep(atk.getAttack().getDuration());

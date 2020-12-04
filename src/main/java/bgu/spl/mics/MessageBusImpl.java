@@ -67,7 +67,7 @@ public class MessageBusImpl implements MessageBus {
 	@Override
 	public <T> Future<T> sendEvent(Event<T> e) {
 		Future<T> future = new Future<T>();
-		if (e.getClass()==AttackEvent.class){
+		if (e.getClass() == AttackEvent.class){
 			// send by round robin manner
 			String turn = roundRobin();
 			this.queueMap.get(turn).add(e);		// Adds Message (Event in this case) e to the relevant M-S.
