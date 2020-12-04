@@ -16,12 +16,13 @@ public class Ewoks {
 
     public static Ewoks getInstance(int num){
         if (ewok == null){
-            return new Ewoks(num);
+            ewok = new Ewoks(num);
         }
         return ewok;
     }
 
     private Ewoks(int num){
+        ewoks = new Vector<>(0,1);
         for (int i=0; i<num; i++){
             Ewok e = new Ewok(i);
             ewoks.add(e);
