@@ -1,6 +1,8 @@
 Write your questions here!
 
 - What does it mean when we put Future<?>?? (What does the ? mean). See MsgBusImpl.
+- Can we implement Diary as a SingleTone Class?
+
 
 
 
