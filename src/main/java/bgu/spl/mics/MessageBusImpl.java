@@ -1,4 +1,6 @@
 package bgu.spl.mics;
+import bgu.spl.mics.application.messages.AttackEvent;
+
 import java.util.Vector;
 import java.util.Collections.*;
 import java.util.HashMap;
@@ -65,7 +67,7 @@ public class MessageBusImpl implements MessageBus {
 	}
 	
 	@Override
-	public <T> Future<T> sendEvent(Event<T> e) {
+	public synchronized <T> Future<T> sendEvent(Event<T> e) {
 		Future<T> future = new Future<T>();
 		if (e.getClass() == AttackEvent.class){
 			// send by round robin manner
@@ -108,7 +110,7 @@ public class MessageBusImpl implements MessageBus {
 	}
 
 	@Override
-	public Message awaitMessage(MicroService m) throws InterruptedException {
+	public synchronized Message awaitMessage(MicroService m) throws InterruptedException {
 		// if there is a message, return it. If not, wait.
 		while (this.queueMap.get(m.getName()).isEmpty())	// Can also be  a while (style Wait & Notify Design).
 			wait();			// maybe m.wait()? wait() -> this msgBus will wait?
