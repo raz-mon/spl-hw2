@@ -29,9 +29,13 @@ public class Future<T> {
      * @return return the result of type T if it is available, if not wait until it is available.
      * 	       
      */
-	public T get() {
-		
-        return null; 
+	public synchronized T get() {
+		while (!this.isDone) {
+			try{
+				this.wait();
+			} catch(Exception e) {System.out.println("problem in future-wait");}
+		}
+        return this.result;
 	}
 	
 	/**
@@ -40,6 +44,7 @@ public class Future<T> {
 	public void resolve (T result) {
 		this.result = result;
 		isDone = true;
+		notifyAll();
 	}
 	
 	/**
@@ -60,8 +65,8 @@ public class Future<T> {
      * 	       wait for {@code timeout} TimeUnits {@code unit}. If time has
      *         elapsed, return null.
      */
-	public T get(long timeout, TimeUnit unit) {
-		if (isDone == true)
+	public synchronized T get(long timeout, TimeUnit unit) {
+		if (isDone)
 			return result;
 		try{
 			unit.sleep(timeout);		// This doesn't really implement correctly I think. We need to wait timeout timeunis, here we wait timeout milliseconds.
@@ -69,7 +74,7 @@ public class Future<T> {
 		catch(Exception e){
 			System.out.println("Something went wrong, at get method of Future.");
 		}
-		if (isDone == true)
+		if (isDone)
 			return result;
 		else
 			return null;

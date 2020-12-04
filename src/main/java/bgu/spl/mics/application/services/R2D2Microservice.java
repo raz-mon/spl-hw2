@@ -25,10 +25,12 @@ public class R2D2Microservice extends MicroService {
 
     @Override
     protected void initialize() {
-        subscribeBroadcast(ExplotionBroadcast.class, (exp) -> {terminate();});
+        subscribeBroadcast(ExplotionBroadcast.class, (exp) -> {diary.setR2D2Terminate(System.currentTimeMillis());
+            terminate();});
         subscribeEvent(DeactivationEvent.class,(deactivate) -> {
             try{
                 Thread.sleep(duration);
+                diary.setR2D2Deactivate(System.currentTimeMillis());
                 // send event to lando\leia..
             }
             catch (InterruptedException e){

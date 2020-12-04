@@ -1,4 +1,6 @@
 package bgu.spl.mics;
+import bgu.spl.mics.application.passiveObjects.Diary;
+
 import java.util.HashMap;
 
 import java.util.Vector;
@@ -26,6 +28,8 @@ public abstract class MicroService implements Runnable {
     private HashMap<Class<? extends Message>, Callback> msgToCallback;       //mapping a messege type into it's callback
     private MessageBus msgBus;
     private boolean terminated;
+    protected Diary diary;      // Make sure it's ok that this is protected.
+    protected int totalAttacks;     // Make sure it's ok that this is protected.
 
     /**
      * @param name the micro-service name (used mainly for debugging purposes -

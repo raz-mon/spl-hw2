@@ -14,9 +14,9 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * HanSoloMicroservices is in charge of the handling {@link AttackEvents}.
+ * HanSoloMicroservices is in charge of the handling {@link AttackEvent}.
  * This class may not hold references for objects which it is not responsible for:
- * {@link AttackEvents}.
+ * {@link AttackEvent}.
  *
  * You can add private fields and public methods to this class.
  * You MAY change constructor signatures and even add new public constructors.
@@ -29,7 +29,9 @@ public class HanSoloMicroservice extends MicroService {
 
     @Override
     protected void initialize() {
-        subscribeBroadcast(ExplotionBroadcast.class, (exp) -> {terminate(); });
+        subscribeBroadcast(ExplotionBroadcast.class, (exp) -> {diary.setTotalAttacks(totalAttacks);
+            diary.setHanSoloTerminate(System.currentTimeMillis());
+            terminate(); });
         subscribeEvent(AttackEvent.class,(atk) -> {
             List<Integer> serials = atk.getAttack().getSerials();       //Our Ewoks serials in order we could attack
             Ewoks ewks = Ewoks.getInstance(serials.size());             //Global Ewoks list
@@ -59,6 +61,8 @@ public class HanSoloMicroservice extends MicroService {
             }
 
             complete(atk, true);
+            totalAttacks = totalAttacks+1;
+            diary.setHanSoloFinish(System.currentTimeMillis());
         });
     }
 }

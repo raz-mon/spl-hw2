@@ -1,8 +1,5 @@
 package bgu.spl.mics.application.services;
 
-import bgu.spl.mics.Message;
-import bgu.spl.mics.MessageBus;
-import bgu.spl.mics.MessageBusImpl;
 import bgu.spl.mics.MicroService;
 import bgu.spl.mics.application.messages.AttackEvent;
 import bgu.spl.mics.application.messages.ExplotionBroadcast;
@@ -13,22 +10,23 @@ import java.util.List;
 
 
 /**
- * C3POMicroservices is in charge of the handling {@link AttackEvents}.
+ * C3POMicroservices is in charge of the handling {@link AttackEvent}.
  * This class may not hold references for objects which it is not responsible for:
- * {@link AttackEvents}.
+ * {@link AttackEvent}.
  *
  * You can add private fields and public methods to this class.
  * You MAY change constructor signatures and even add new public constructors.
  */
 public class C3POMicroservice extends MicroService {            // Does this class have to implement message interface? It sends messages.. Or maybe only abstract class Micro-srervice has to implement Message.
-	
+
     public C3POMicroservice() {
         super("C3PO");
     }
 
     @Override
     protected void initialize() {
-        subscribeBroadcast(ExplotionBroadcast.class, (exp) -> {terminate(); });
+        subscribeBroadcast(ExplotionBroadcast.class, (exp) -> {diary.setC3POTerminate(System.currentTimeMillis());
+            terminate(); });
         subscribeEvent(AttackEvent.class,(atk) -> {
             List<Integer> serials = atk.getAttack().getSerials();       //Our Ewoks serials in order we could attack
             Ewoks ewks = Ewoks.getInstance(serials.size());             //Global Ewoks list
@@ -58,6 +56,8 @@ public class C3POMicroservice extends MicroService {            // Does this cla
             }
 
             complete(atk, true);
+            totalAttacks = totalAttacks+1;
+            diary.setC3POFinish(System.currentTimeMillis());
         });
     }
 }

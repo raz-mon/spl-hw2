@@ -22,7 +22,7 @@ public class Ewoks {
     }
 
     private Ewoks(int num){
-        ewoks = new Vector<>(0,1);
+        ewoks = new Vector<Ewok>(0,1);
         for (int i=0; i<num; i++){
             Ewok e = new Ewok(i);
             ewoks.add(e);
