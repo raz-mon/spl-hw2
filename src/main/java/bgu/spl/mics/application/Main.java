@@ -4,6 +4,7 @@ import java.nio.file.Watchable;
 import java.util.Vector;
 
 import bgu.spl.mics.MessageBusImpl;
+import bgu.spl.mics.application.passiveObjects.Diary;
 import bgu.spl.mics.application.passiveObjects.Ewok;
 import bgu.spl.mics.application.passiveObjects.Ewoks;
 import bgu.spl.mics.application.services.*;
@@ -21,11 +22,11 @@ public class Main {
 		try {
 			Reader reader = new FileReader(args[0]);
 			input in = gson.fromJson(reader, input.class);
-			System.out.println(in);
+
 			simulate(in);
 		}
 		catch(Exception e){
-			System.out.println("problem with Gson2 man..");
+			System.out.println("problem accured");
 		}
 	}
 
@@ -38,6 +39,7 @@ public class Main {
 
 		Ewoks ewks = Ewoks.getInstance(in.getEwoks());		// Ewoks is single-tone -> only one instance (this one) will be used through-out the program.
 		MessageBusImpl msgbus = MessageBusImpl.getInstance();		// Makes sense to initialize msgBus here to.
+		Diary diary = Diary.getInstance();
 
 		Thread t1 = new Thread(leia);
 		Thread t2 = new Thread(han);
@@ -51,5 +53,10 @@ public class Main {
 		t4.start();
 		t5.start();
 	}
+
+	public static void outputConfig(){
+
+	}
+
 }
 

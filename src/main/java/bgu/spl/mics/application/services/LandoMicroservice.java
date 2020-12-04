@@ -22,7 +22,8 @@ public class LandoMicroservice  extends MicroService {
 
     @Override
     protected void initialize() {
-        subscribeBroadcast(ExplotionBroadcast.class, (exp) -> {terminate();});
+        subscribeBroadcast(ExplotionBroadcast.class, (exp) -> {diary.setLandoTerminate(System.currentTimeMillis());
+            terminate();});
         subscribeEvent(BombDestroyerEvent.class,(bombardment) -> {
             try{
                 Thread.sleep(duration);
@@ -34,4 +35,5 @@ public class LandoMicroservice  extends MicroService {
             complete(bombardment, true);
         });
     }
+
 }

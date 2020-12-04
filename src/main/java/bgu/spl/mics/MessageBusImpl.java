@@ -1,9 +1,9 @@
 package bgu.spl.mics;
-import bgu.spl.mics.application.messages.AttackEvent;
-
 import java.util.Vector;
 import java.util.Collections.*;
 import java.util.HashMap;
+import bgu.spl.mics.Future;
+import bgu.spl.mics.application.messages.AttackEvent;
 
 /**
  * The {@link MessageBusImpl class is the implementation of the MessageBus interface.
@@ -19,6 +19,7 @@ public class MessageBusImpl implements MessageBus {
 	private HashMap<String, Vector<Message>> queueMap;
 	private Vector<String> names;
 	private static String last;		// last will hold the last M-S between Han-Solo and C3PO that was assigned an AttackEvent.
+	private HashMap<Event<?>, Future<?>> EventToFuture;	// could be a problematic call, cause Future is Generic.
 
 	private static MessageBusImpl msgBus = null;
 
@@ -32,9 +33,9 @@ public class MessageBusImpl implements MessageBus {
 //		this.queues = new Vector<Vector<Message>>(0,1);
 //		this.interests = new Vector<Vector<Class<? extends Message>>>(0,1);
 		this.names = new Vector<String>(0,1);
-
 		this.interestsMap = new HashMap<>(0);
 		this.queueMap = new HashMap<>(0);
+		this.EventToFuture = new HashMap<>(0);
 		last = null;
 	}
 	
@@ -54,7 +55,8 @@ public class MessageBusImpl implements MessageBus {
 
 	@Override @SuppressWarnings("unchecked")
 	public <T> void complete(Event<T> e, T result) {
-		
+		Future f = this.EventToFuture.get(e);
+		f.resolve(result);
 	}
 
 	@Override
@@ -67,13 +69,13 @@ public class MessageBusImpl implements MessageBus {
 	}
 	
 	@Override
-	public synchronized <T> Future<T> sendEvent(Event<T> e) {
+	public <T> Future<T> sendEvent(Event<T> e) {
 		Future<T> future = new Future<T>();
-		if (e.getClass() == AttackEvent.class){
+		if (e.getClass().equals(AttackEvent.class)){
 			// send by round robin manner
 			String turn = roundRobin();
-			this.queueMap.get(turn).add(e);		// Adds Message (Event in this case) e to the relevant M-S.
-			// Still need to deal with the future somehow.
+			this.queueMap.get(turn).add(e);		// Adds Message (Event in this case) e to the relevant M-S's queue (vector in our implementation)..
+			this.EventToFuture.put(e, future);
 		}
 		else		// All Events but AttackEvent
 		for (String name : names){
@@ -110,7 +112,7 @@ public class MessageBusImpl implements MessageBus {
 	}
 
 	@Override
-	public synchronized Message awaitMessage(MicroService m) throws InterruptedException {
+	public Message awaitMessage(MicroService m) throws InterruptedException {
 		// if there is a message, return it. If not, wait.
 		while (this.queueMap.get(m.getName()).isEmpty())	// Can also be  a while (style Wait & Notify Design).
 			wait();			// maybe m.wait()? wait() -> this msgBus will wait?
