@@ -29,9 +29,9 @@ public class Ewoks {
         }
     }
 
-    public Ewok getEwok(int i){
+    public synchronized Ewok getEwok(int i){
         if(i > ewoks.size())                            //Need to check if ewoks start from zero or one
             throw new IndexOutOfBoundsException();
-        return this.ewoks.get(i);
+        return this.ewoks.get(i - 1);
     }
 }

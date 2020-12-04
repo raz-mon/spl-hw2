@@ -32,7 +32,7 @@ public class Future<T> {
 	public synchronized T get() {
 		while (!this.isDone) {
 			try{
-				this.wait();
+				wait();
 			} catch(Exception e) {System.out.println("problem in future-wait");}
 		}
         return this.result;
@@ -41,10 +41,10 @@ public class Future<T> {
 	/**
      * Resolves the result of this Future object.
      */
-	public void resolve (T result) {
+	public synchronized void resolve (T result) {
 		this.result = result;
 		isDone = true;
-		notifyAll();
+		notify();
 	}
 	
 	/**

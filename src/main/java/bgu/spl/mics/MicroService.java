@@ -4,6 +4,7 @@ import bgu.spl.mics.application.passiveObjects.Diary;
 import java.util.HashMap;
 
 import java.util.Vector;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * The MicroService is an abstract class that any micro-service in the system
@@ -24,8 +25,8 @@ import java.util.Vector;
  * <p>
  */
 public abstract class MicroService implements Runnable {
-    private String name;
-    private HashMap<Class<? extends Message>, Callback> msgToCallback;       //mapping a messege type into it's callback
+    private final String name;
+    private ConcurrentHashMap<Class<? extends Message>, Callback> msgToCallback;       //mapping a messege type into it's callback
     private MessageBus msgBus;
     private boolean terminated;
     protected Diary diary;      // Make sure it's ok that this is protected.
@@ -38,7 +39,7 @@ public abstract class MicroService implements Runnable {
     public MicroService(String name) {
         this.name = name;
          msgBus = MessageBusImpl.getInstance();
-         msgToCallback = new HashMap<Class<? extends Message>, Callback>(0);
+         msgToCallback = new ConcurrentHashMap<Class<? extends Message>, Callback>(0);
          this.terminated = false;
     }
 

@@ -56,7 +56,7 @@ public class C3POMicroservice extends MicroService {            // Does this cla
             }
 
             complete(atk, true);
-            totalAttacks = totalAttacks+1;
+            totalAttacks = totalAttacks + 1;
             diary.setC3POFinish(System.currentTimeMillis());
         });
     }

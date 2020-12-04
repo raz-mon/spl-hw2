@@ -18,15 +18,25 @@ public class Diary {
     long LeiaTerminate;
     long LandoTerminate;
 
-    private static Diary diary= null;
+    private static Diary diary = null;
 
     public static Diary getInstance(){
-        if (diary==null)
+        if (diary == null)
             diary = new Diary();
          return diary;
     }
 
-    private Diary(){}        // Empty CTR.
+    private Diary(){
+        totalAttacks = 0;
+        HanSoloFinish = 0;
+        HanSoloTerminate = 0;
+        C3POFinish = 0;
+        C3POTerminate = 0;
+        R2D2Deactivate = 0;
+        R2D2Terminate = 0;
+        LeiaTerminate = 0;
+        LandoTerminate = 0;
+    }        // Empty CTR.
 
     public int getTotalAttacks(){
         return this.totalAttacks;

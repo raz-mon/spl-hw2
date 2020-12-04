@@ -2,6 +2,9 @@ package bgu.spl.mics;
 import java.util.Vector;
 import java.util.Collections.*;
 import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.*;
+
 import bgu.spl.mics.Future;
 import bgu.spl.mics.application.messages.AttackEvent;
 
@@ -15,11 +18,12 @@ public class MessageBusImpl implements MessageBus {
 //	private Vector<Vector<Message>> queues;
 //	private Vector<Vector<Class<? extends Message>>> interests;
 
-	private HashMap<String, Vector<Class<? extends Message>>> interestsMap;	  // Option to use concurrent Hashmap.
-	private HashMap<String, Vector<Message>> queueMap;
+	private ConcurrentHashMap<String, Vector<Class<? extends Message>>> interestsMap;	  // Option to use concurrent Hashmap.
+	private ConcurrentHashMap<String, Vector<Message>> queueMap;
 	private Vector<String> names;
 	private static String last;		// last will hold the last M-S between Han-Solo and C3PO that was assigned an AttackEvent.
-	private HashMap<Event<?>, Future<?>> EventToFuture;	// could be a problematic call, cause Future is Generic.
+	private ConcurrentHashMap<Event<?>, Future<?>> EventToFuture;	// could be a problematic call, cause Future is Generic.
+	private Object Lock;
 
 	private static MessageBusImpl msgBus = null;
 
@@ -33,10 +37,11 @@ public class MessageBusImpl implements MessageBus {
 //		this.queues = new Vector<Vector<Message>>(0,1);
 //		this.interests = new Vector<Vector<Class<? extends Message>>>(0,1);
 		this.names = new Vector<String>(0,1);
-		this.interestsMap = new HashMap<>(0);
-		this.queueMap = new HashMap<>(0);
-		this.EventToFuture = new HashMap<>(0);
+		this.interestsMap = new ConcurrentHashMap<>(0);
+		this.queueMap = new ConcurrentHashMap<>(0);
+		this.EventToFuture = new ConcurrentHashMap<>(0);
 		last = null;
+		Lock = new Object();
 	}
 	
 	@Override
@@ -61,30 +66,35 @@ public class MessageBusImpl implements MessageBus {
 
 	@Override
 	public void sendBroadcast(Broadcast b) {
-		for (String name : names){
-			if (this.interestsMap.get(name).contains(b.getClass()))
-				this.queueMap.get(name).add(b);		// Adds broadcast b to all relevant M-S.
+		synchronized (Lock){
+			for (String name : names){
+				if (this.interestsMap.get(name).contains(b.getClass()))
+					this.queueMap.get(name).add(b);		// Adds broadcast b to all relevant M-S.
+			}
+			Lock.notifyAll();
 		}
-		notifyAll();		// Awaken all waiting methods.
 	}
 	
 	@Override
 	public <T> Future<T> sendEvent(Event<T> e) {
-		Future<T> future = new Future<T>();
-		if (e.getClass().equals(AttackEvent.class)){
-			// send by round robin manner
-			String turn = roundRobin();
-			this.queueMap.get(turn).add(e);		// Adds Message (Event in this case) e to the relevant M-S's queue (vector in our implementation)..
-			this.EventToFuture.put(e, future);
+		synchronized (Lock){
+			Future<T> future = new Future<T>();
+			if (e.getClass().equals(AttackEvent.class)){
+				// send by round robin manner
+				String turn = roundRobin();
+				this.queueMap.get(turn).add(e);		// Adds Message (Event in this case) e to the relevant M-S's queue (vector in our implementation)..
+				this.EventToFuture.put(e, future);
+			}
+			else		// All Events but AttackEvent
+				for (String name : names){
+					if (this.interestsMap.get(name).contains(e.getClass())) {
+						this.queueMap.get(name).add(e);        // Adds message (Event in this case) e to the relevant M-S (only one of those if this is not and AttackEvent). [Make sure there is only one].
+					}
+				}
+			// Idea -> Save a vector (or concurrentHashMaps) of futures. When the relevant event is completed, the complete method will resolve the future (and notify sender?).
+			Lock.notify();
+			return future;
 		}
-		else		// All Events but AttackEvent
-		for (String name : names){
-			if (this.interestsMap.get(name).contains(e.getClass()))
-				this.queueMap.get(name).add(e);		// Adds message (Event in this case) e to the relevant M-S (only one of those if this is not and AttackEvent). [Make sure there is only one].
-		}
-		// Idea -> Save a vector (or concurrentHashMaps) of futures. When the relevant event is completed, the complete method will resolve the future (and notify sender?).
-		notifyAll();		// Awaken all waiting methods.
-		return future;
 	}
 
 	@Override
@@ -113,11 +123,16 @@ public class MessageBusImpl implements MessageBus {
 
 	@Override
 	public Message awaitMessage(MicroService m) throws InterruptedException {
-		// if there is a message, return it. If not, wait.
-		while (this.queueMap.get(m.getName()).isEmpty())	// Can also be  a while (style Wait & Notify Design).
-			wait();			// maybe m.wait()? wait() -> this msgBus will wait?
-		return queueMap.get(m.getName()).firstElement();
+		synchronized (Lock){
+			// if there is a message, return it. If not, wait.
+			while (this.queueMap.get(m.getName()).isEmpty()) {    // Can also be  a while (style Wait & Notify Design).
+				Lock.wait();           // maybe m.wait()? wait() -> this msgBus will wait?
+			}
+		Message msg = queueMap.get(m.getName()).firstElement();
+		queueMap.get(m.getName()).remove(0);
+		return msg;
 		// Again, Check Vectors methods for correctness and that it indeed works here well (it should, for it is thread-safe).
+		}
 	}
 
 

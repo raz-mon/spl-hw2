@@ -61,7 +61,7 @@ public class HanSoloMicroservice extends MicroService {
             }
 
             complete(atk, true);
-            totalAttacks = totalAttacks+1;
+            totalAttacks = totalAttacks + 1;
             diary.setHanSoloFinish(System.currentTimeMillis());
         });
     }
