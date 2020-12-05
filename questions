@@ -3,7 +3,8 @@ Write your questions here!
 - What does it mean when we put Future<?>?? (What does the ? mean). See MsgBusImpl.
 - Can we implement Diary as a SingleTone Class?
 - Where do i save the output and how do i call it?
--why does attackEvent return to src each and every time, even though we deleted it.
+- why does attackEvent return to src each and every time, even though we deleted it.
+- 
 
 
 
