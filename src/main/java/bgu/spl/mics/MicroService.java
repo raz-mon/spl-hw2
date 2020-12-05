@@ -41,6 +41,7 @@ public abstract class MicroService implements Runnable {
          msgBus = MessageBusImpl.getInstance();
          msgToCallback = new ConcurrentHashMap<Class<? extends Message>, Callback>(0);
          this.terminated = false;
+         diary = Diary.getInstance();
     }
 
     /**

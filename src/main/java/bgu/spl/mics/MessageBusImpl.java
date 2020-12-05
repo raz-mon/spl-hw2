@@ -92,7 +92,7 @@ public class MessageBusImpl implements MessageBus {
 					}
 				}
 			// Idea -> Save a vector (or concurrentHashMaps) of futures. When the relevant event is completed, the complete method will resolve the future (and notify sender?).
-			Lock.notify();
+			Lock.notifyAll();
 			return future;
 		}
 	}

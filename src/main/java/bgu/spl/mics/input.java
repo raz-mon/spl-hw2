@@ -1,6 +1,6 @@
 package bgu.spl.mics;
 
-
+import java.util.ArrayList;
 import bgu.spl.mics.application.passiveObjects.Attack;
 
 public class input {
@@ -25,6 +25,9 @@ public class input {
     }
 
     public Attack[] getAttacks(){
+        for(int i=0; i<attacks.length; i++){
+            attacks[i].getSerials().sort((a,b) -> {return a-b;});
+        }
         return attacks;
     }
 

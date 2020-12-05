@@ -110,5 +110,25 @@ public class Diary {
         this.LandoTerminate = LandoTerminate;
     }
 
+    public String toString(){
+        String ret = new String();
+        ret = "total attacks: " + totalAttacks + "\n" + "HanSoloFinosh: " + HanSoloFinish + "\n" + "C3POFinish: " + C3POFinish  + "\n" +
+            "C3POTerminate: " + C3POFinish + "\n" + "R2D2Deactivate: " + R2D2Deactivate + "\n" + "R2D2Terminate: " + R2D2Terminate + "\n" +
+                "LeiaTerminate: " + LeiaTerminate + "\n" +  "LandoTerminate: "  + LandoTerminate;
+        return ret;
+    }
+
+    /*   int totalAttacks;
+    long HanSoloFinish;
+    long HanSoloTerminate;
+    long C3POFinish;
+    long C3POTerminate;
+    long R2D2Deactivate;
+    long R2D2Terminate;
+    long LeiaTerminate;
+    long LandoTerminate;
+
+     */
+
 }
 

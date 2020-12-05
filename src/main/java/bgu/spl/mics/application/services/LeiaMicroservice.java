@@ -51,6 +51,7 @@ public class LeiaMicroservice extends MicroService {
         //wait till all leia's attackEvent's futures are resolve
         while (i < ftr.length - 2){
             ftr[i].get();
+            i++;
         }
 
         DeactivationEvent deactEve = new DeactivationEvent();
@@ -62,35 +63,5 @@ public class LeiaMicroservice extends MicroService {
         ftr[ftr.length - 1].get();                                  //wait till lando will destroy the ship
 
         sendBroadcast(new ExplotionBroadcast());                    //the bad guys are dead and the ship exploded, send everyone a broadcast
-    }
-
-    private void completeAttacks(int i){
-        while (!ftr[i].isDone()){
-            try {
-                ftr[i].wait();
-            }catch (Exception e){
-                System.out.println("Problem with leia's future: " + i);
-            }
-        }
-    }
-
-    private void completeDeactivation(){
-        while (!ftr[ftr.length - 2].isDone()){
-            try {
-                ftr[ftr.length - 2].wait();
-            }catch (Exception e){
-                System.out.println("Problem with leia's Deactivation's future");
-            }
-        }
-    }
-
-    private void completeBombDestroyer() {
-        while (!ftr[ftr.length - 1].isDone()) {
-            try {
-                ftr[ftr.length - 1].wait();
-            } catch (Exception e) {
-                System.out.println("Problem with leia's BombDestroyer's future");
-            }
-        }
     }
 }

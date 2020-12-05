@@ -44,7 +44,7 @@ public class Future<T> {
 	public synchronized void resolve (T result) {
 		this.result = result;
 		isDone = true;
-		notify();
+		notifyAll();
 	}
 	
 	/**

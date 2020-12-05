@@ -23,15 +23,15 @@ public class Ewoks {
 
     private Ewoks(int num){
         ewoks = new Vector<Ewok>(0,1);
-        for (int i=0; i<num; i++){
+        for (int i=1; i<=num; i++){
             Ewok e = new Ewok(i);
             ewoks.add(e);
         }
     }
 
-    public synchronized Ewok getEwok(int i){
-        if(i > ewoks.size())                            //Need to check if ewoks start from zero or one
+    public Ewok getEwok(int i){
+        if(i > ewoks.size())
             throw new IndexOutOfBoundsException();
-        return this.ewoks.get(i - 1);
+        return this.ewoks.get(i-1);
     }
 }
