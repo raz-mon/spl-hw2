@@ -27,19 +27,7 @@ public class Main {
 			input in = gson.fromJson(reader, input.class);
 			Diary diary = Diary.getInstance();
 
-/*			ArrayList<Integer> l = new ArrayList<>();
-			l.add(6);
-			l.add(5);
-			System.out.println(l);
-			l.sort((a,b) -> {return a-b;});
-			System.out.println(l);
-
- */
-
 			simulate(in);
-
-			System.out.println(diary);		// This is instead of making the Json file for now..
-
 		}
 		catch(Exception e){
 			System.out.println("problem accured");
