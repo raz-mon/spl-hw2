@@ -89,6 +89,7 @@ public class MessageBusImpl implements MessageBus {
 				for (String name : names){
 					if (this.interestsMap.get(name).contains(e.getClass())) {
 						this.queueMap.get(name).add(e);        // Adds message (Event in this case) e to the relevant M-S (only one of those if this is not and AttackEvent). [Make sure there is only one].
+						this.EventToFuture.put(e, future);
 					}
 				}
 			// Idea -> Save a vector (or concurrentHashMaps) of futures. When the relevant event is completed, the complete method will resolve the future (and notify sender?).
