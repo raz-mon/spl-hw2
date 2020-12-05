@@ -29,8 +29,7 @@ public class HanSoloMicroservice extends MicroService {
 
     @Override
     protected void initialize() {
-        subscribeBroadcast(ExplotionBroadcast.class, (exp) -> {diary.setTotalAttacks(totalAttacks);
-            diary.setHanSoloTerminate(System.currentTimeMillis());
+        subscribeBroadcast(ExplotionBroadcast.class, (exp) -> {diary.setHanSoloTerminate(System.currentTimeMillis());
             terminate(); });
         subscribeEvent(AttackEvent.class,(atk) -> {
             List<Integer> serials = atk.getAttack().getSerials();       //Our Ewoks serials in order we could attack
@@ -61,7 +60,7 @@ public class HanSoloMicroservice extends MicroService {
             }
 
             complete(atk, true);
-            totalAttacks = totalAttacks + 1;
+            diary.setTotalAttacks(diary.getTotalAttacks()+1);
 
             diary.setHanSoloFinish(System.currentTimeMillis());
         });

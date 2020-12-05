@@ -91,7 +91,7 @@ public class Diary {
     }
 
     public void setLeiaTerminate(long LeiaTerminate){
-        this.LandoTerminate = LeiaTerminate;
+        this.LeiaTerminate = LeiaTerminate;
     }
 
     public void setHanSoloTerminate(long HanSoloTerminate){
