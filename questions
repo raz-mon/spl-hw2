@@ -1,5 +1,6 @@
 Write your questions here!
 
+- Do the join() commands damage the conccurancy of our program?????????????????????????? 
 - What does it mean when we put Future<?>?? (What does the ? mean). See MsgBusImpl.
 - Can we implement Diary as a SingleTone Class?
 - Where do i save the output and how do i call it?
