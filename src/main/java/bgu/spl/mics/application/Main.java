@@ -1,5 +1,6 @@
 package bgu.spl.mics.application;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.nio.file.Watchable;
 import java.util.List;
 import java.util.Vector;
@@ -11,6 +12,8 @@ import bgu.spl.mics.application.passiveObjects.Ewoks;
 import bgu.spl.mics.application.services.*;
 import bgu.spl.mics.input;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 import java.io.Reader;
 
 import java.util.ArrayList;
@@ -26,8 +29,8 @@ public class Main {
 			Reader reader = new FileReader(args[0]);
 			input in = gson.fromJson(reader, input.class);
 			Diary diary = Diary.getInstance();
-
 			simulate(in);
+			outputConfig(diary, args[1]);
 		}
 		catch(Exception e){
 			System.out.println("problem accured");
@@ -56,10 +59,24 @@ public class Main {
 		t3.start();
 		t4.start();
 		t5.start();
+
+		try{
+			t1.join();
+			t2.join();
+			t3.join();
+			t4.join();
+			t5.join();
+		}catch(Exception e) {System.out.println("problem accured with joining threads");}		// In order to get a right answer at outputConfig.
 	}
 
-	public static void outputConfig(){
-
+	public static void outputConfig(Diary diary, String outPath){
+		Gson g = new GsonBuilder().setPrettyPrinting().create();
+		try{
+			FileWriter writer = new FileWriter(outPath);
+			g.toJson(diary,writer);
+			writer.flush();
+			writer.close();
+		} catch(Exception e) {System.out.println("problem with generating output file");}
 	}
 
 }
