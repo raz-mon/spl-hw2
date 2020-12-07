@@ -111,11 +111,7 @@ public class MessageBusImpl implements MessageBus {
 			while (this.queueMap.get(m.getName()).isEmpty()) {    // Can also be  a while (style Wait & Notify Design).
 				this.queueMap.get(m.getName()).wait();           // maybe m.wait()? wait() -> this msgBus will wait?
 			}
-			Message msg = queueMap.get(m.getName()).firstElement();
-
-			System.out.println(m.getName() + " has got a message: " + msg);
-
-
+		Message msg = queueMap.get(m.getName()).firstElement();
 		queueMap.get(m.getName()).remove(0);
 		return msg;
 		}

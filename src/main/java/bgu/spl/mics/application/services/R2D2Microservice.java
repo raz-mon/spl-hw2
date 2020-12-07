@@ -18,6 +18,7 @@ import bgu.spl.mics.application.messages.ExplotionBroadcast;
 public class R2D2Microservice extends MicroService {
 
     private final long duration;
+
     public R2D2Microservice(long duration) {
         super("R2D2");
         this.duration = duration;
@@ -33,9 +34,8 @@ public class R2D2Microservice extends MicroService {
                 diary.setR2D2Deactivate(System.currentTimeMillis());
             }
             catch (InterruptedException e){
-                System.out.println("Sleep had fail");
+                System.out.println("Sleep had failed");
             }
-
             complete(deactivate, true);
         });
     }

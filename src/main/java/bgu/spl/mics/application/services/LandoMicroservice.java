@@ -27,10 +27,7 @@ public class LandoMicroservice  extends MicroService {
         subscribeEvent(BombDestroyerEvent.class,(bombardment) -> {
             try{
                 Thread.sleep(duration);
-            }
-            catch (InterruptedException e){
-                System.out.println("Sleep had fail");
-            }
+            }catch (InterruptedException e){ System.out.println("Sleep had fail"); }
 
             complete(bombardment, true);
         });

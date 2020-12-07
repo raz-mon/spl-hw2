@@ -41,7 +41,7 @@ public class Ewok {
    // ------------------------------ from here on - this is only for our internal testing.
 
     /**
-     * This function is for our use only for testing!!
+     * This function is only for testing!!
      * @return
      */
     public boolean isAvailable(){

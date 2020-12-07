@@ -117,18 +117,5 @@ public class Diary {
                 "LeiaTerminate: " + LeiaTerminate + "\n" +  "LandoTerminate: "  + LandoTerminate;
         return ret;
     }
-
-    /*   int totalAttacks;
-    long HanSoloFinish;
-    long HanSoloTerminate;
-    long C3POFinish;
-    long C3POTerminate;
-    long R2D2Deactivate;
-    long R2D2Terminate;
-    long LeiaTerminate;
-    long LandoTerminate;
-
-     */
-
 }
 
