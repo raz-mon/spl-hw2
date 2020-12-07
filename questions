@@ -3,6 +3,7 @@ Write your questions here!
 - Do the join() commands damage the conccurancy of our program?????????????????????????? 
 - What does it mean when we put Future<?>?? (What does the ? mean). See MsgBusImpl.
 - Do we need to use interrupt()?? Why not just wait for the explotion broadcast?
+  It's just another option, but I don't see any reason to use this in our project..
 - An explanation about the "target" file and all what's going on in the project files wold be grate.
 - Where do i save the output and how do i call it?
 - why does attackEvent return to src each and every time, even though we deleted it.
