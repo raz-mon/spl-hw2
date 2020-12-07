@@ -3,8 +3,6 @@ import bgu.spl.mics.application.passiveObjects.Diary;
 
 import java.util.HashMap;
 
-import java.util.Vector;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * The MicroService is an abstract class that any micro-service in the system
@@ -26,11 +24,10 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public abstract class MicroService implements Runnable {
     private final String name;
-    private ConcurrentHashMap<Class<? extends Message>, Callback> msgToCallback;       //mapping a messege type into it's callback
+    private HashMap<Class<? extends Message>, Callback> msgToCallback;       //mapping a messege type into it's callback
     private MessageBus msgBus;
     private boolean terminated;
     protected Diary diary;      // Make sure it's ok that this is protected.
-    protected int totalAttacks;     // Make sure it's ok that this is protected.
 
     /**
      * @param name the micro-service name (used mainly for debugging purposes -
@@ -39,7 +36,7 @@ public abstract class MicroService implements Runnable {
     public MicroService(String name) {
         this.name = name;
          msgBus = MessageBusImpl.getInstance();
-         msgToCallback = new ConcurrentHashMap<Class<? extends Message>, Callback>(0);
+         msgToCallback = new HashMap<Class<? extends Message>, Callback>(0);
          this.terminated = false;
          diary = Diary.getInstance();
     }
@@ -146,7 +143,7 @@ public abstract class MicroService implements Runnable {
      */
     protected final void terminate() {
         this.terminated = true;
-        System.out.println("Finish!");
+//        System.out.println(name + " has terminated gracfully!");
     }
 
     /**
@@ -171,7 +168,7 @@ public abstract class MicroService implements Runnable {
                 Message msg = msgBus.awaitMessage(this);
                 msgToCallback.get(msg.getClass()).call(msg);
             } catch (InterruptedException e) {
-                System.out.println(getName() + " is not register!");
+                System.out.println(getName() + "problem accured at run of: " + name);
             }
         }
     }

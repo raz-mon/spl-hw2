@@ -31,7 +31,6 @@ public class R2D2Microservice extends MicroService {
             try{
                 Thread.sleep(duration);
                 diary.setR2D2Deactivate(System.currentTimeMillis());
-                // send event to lando\leia..
             }
             catch (InterruptedException e){
                 System.out.println("Sleep had fail");

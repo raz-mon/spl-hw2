@@ -20,7 +20,7 @@ public class input {
             if (i!=attacks.length-1)
                 out = out + "\n";
         }
-        out = out + "\n" + "R2D2: " + R2D2 + "\n" + "Lando: " + Lando + "\n" + "Ewols: " + Ewoks;
+        out = out + "\n" + "R2D2: " + R2D2 + "\n" + "Lando: " + Lando + "\n" + "Ewoks: " + Ewoks;
         return out;
     }
 
